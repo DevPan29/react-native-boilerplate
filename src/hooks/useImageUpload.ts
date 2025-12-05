@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react';
 import * as ImagePicker from 'expo-image-picker';
-import { uploadFile, deleteFile } from '../lib/supabase';
+import { uploadFile, deleteFile, supabase } from '../lib/supabase';
 import { useAuthStore } from '../store/authStore';
 import { ImagePickerResult } from '../types';
 
@@ -138,7 +138,7 @@ export const useImageUpload = ({
     }
   }, [bucket, maxSizeMB, clearError]);
 
-  const uploadImage = useCallback(
+    const uploadImage = useCallback(
     async (uri: string): Promise<string> => {
       if (!user) {
         throw new Error('User not authenticated');
@@ -148,10 +148,6 @@ export const useImageUpload = ({
       clearError();
 
       try {
-        // Fetch the image and convert to blob
-        const response = await fetch(uri);
-        const blob = await response.blob();
-
         // Generate unique filename
         const fileExt = uri.split('.').pop()?.toLowerCase() || 'jpg';
         const fileName = `${user.id}/${Date.now()}.${fileExt}`;
@@ -166,18 +162,27 @@ export const useImageUpload = ({
                 ? 'image/webp'
                 : 'image/jpeg';
 
-        // Convert blob to ArrayBuffer
-        const arrayBuffer = await blob.arrayBuffer();
+        // Crea FormData per React Native
+        const formData = new FormData();
+        formData.append('file', {
+          uri: uri,
+          type: contentType,
+          name: fileName,
+        } as any);
 
-        // Upload to Supabase Storage
-        const publicUrl = await uploadFile(
-          bucket,
-          fileName,
-          arrayBuffer,
-          contentType
-        );
+        // Upload a Supabase usando FormData
+        const { data, error } = await supabase.storage
+          .from(bucket)
+          .upload(fileName, formData as any);
 
-        return publicUrl;
+        if (error) throw error;
+
+        // Ottieni l'URL pubblico
+        const { data: publicUrl } = supabase.storage
+          .from(bucket)
+          .getPublicUrl(fileName);
+
+        return publicUrl.publicUrl;
       } catch (err) {
         console.error('Error uploading image:', err);
         const message =
