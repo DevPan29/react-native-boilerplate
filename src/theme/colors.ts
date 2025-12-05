@@ -30,6 +30,7 @@ export const colors = {
   success: {
     50: '#f0fdf4',
     100: '#dcfce7',
+    300: '#86efac',
     500: '#22c55e',
     600: '#16a34a',
     700: '#15803d',
@@ -37,6 +38,7 @@ export const colors = {
   warning: {
     50: '#fffbeb',
     100: '#fef3c7',
+    300: '#fcd34d',
     500: '#f59e0b',
     600: '#d97706',
     700: '#b45309',
@@ -44,6 +46,7 @@ export const colors = {
   danger: {
     50: '#fef2f2',
     100: '#fee2e2',
+    300: '#fca5a5',
     500: '#ef4444',
     600: '#dc2626',
     700: '#b91c1c',
