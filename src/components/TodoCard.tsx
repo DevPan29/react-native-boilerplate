@@ -72,7 +72,7 @@ export const TodoCard: React.FC<TodoCardProps> = ({ todo, onPress }) => {
     >
       <View style={styles.cardContent}>
         {/* Checkbox */}
-        {/* <TouchableOpacity
+        <TouchableOpacity
           onPress={handleToggleStatus}
           disabled={toggleStatus.isPending}
           style={styles.checkbox}
@@ -87,7 +87,7 @@ export const TodoCard: React.FC<TodoCardProps> = ({ todo, onPress }) => {
               <Ionicons name="checkmark" size={16} color={colors.white} />
             )}
           </View>
-        </TouchableOpacity> */}
+        </TouchableOpacity>
 
         {/* Content */}
         <View style={styles.content}>
